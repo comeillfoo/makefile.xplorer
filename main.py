@@ -30,8 +30,6 @@ def main() -> int:
 
     mk_parser = MakefileParser()
     mk_parser.parse(preprocessed_mk)
-    for rule in mk_parser.rules:
-        print(str(rule))
     return 0
 
 
