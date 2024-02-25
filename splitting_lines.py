@@ -4,7 +4,7 @@ from typing import Optional, TypeVar, Callable
 
 ListElement = TypeVar('ListElement')
 
-splitted_not_recipes = re.compile(r'^(?!(\t+))(.*)\\\n')
+split_start_recipe = re.compile(r'^(?!(\t+))(.*)(?<!\\)\\\n')
 
 
 def make_get_or_default(lst: list[ListElement]) -> Callable[[int, Optional[ListElement]], Optional[ListElement]]:
@@ -23,12 +23,12 @@ def eliminate_splitting_lines(makefile: str) -> str:
     # work with lines separately is easier
     i = 0
     while i < len(makefile):
-        m = splitted_not_recipes.match(makefile[i])
+        m = split_start_recipe.match(makefile[i])
         if not m:
             i += 1
             continue
         next_line = mk_getter(i + 1, '').lstrip()
-        makefile[i] = re.sub(splitted_not_recipes, r'\2 ', makefile[i]) + next_line
+        makefile[i] = re.sub(split_start_recipe, r'\2 ', makefile[i]) + next_line
         makefile.pop(i + 1)
 
     return ''.join(makefile)

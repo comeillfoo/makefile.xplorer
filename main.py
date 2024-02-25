@@ -5,6 +5,7 @@ import os
 import errno
 
 from splitting_lines import eliminate_splitting_lines
+from comments import eliminate_comments
 
 
 def args_parser() -> argparse.ArgumentParser:
@@ -24,7 +25,7 @@ def main() -> int:
     with open(args.makefile, encoding='utf-8') as mk_file:
         makefile = mk_file.read()
 
-    print(eliminate_splitting_lines(makefile))
+    print(eliminate_comments(eliminate_splitting_lines(makefile)))
     return 0
 
 
