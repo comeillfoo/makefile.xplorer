@@ -24,12 +24,12 @@ class Rule:
 
     def __init__(self, targets: Filenames, prerequisittes: Filenames,
                  is_default: bool = False, is_grouped: bool = False,
-                 recipe: str = ''):
+                 recipe: list[str] = []):
         self.is_default = is_default
         self.targets = targets
         self.is_grouped_or_independent = is_grouped # targets grouped or independent
         self.prerequisites = prerequisittes
-        self.recipe: list[str] = [ recipe ]
+        self.recipe: list[str] = recipe
 
 
     def __str__(self) -> str:
@@ -49,11 +49,13 @@ class MakefileParser():
     def _parse_base(self, mk_line: str):
         match_rule = Rule.RECIPE_STX.match(mk_line)
         if match_rule: # has match
+            recipe = match_rule.group('recipe')
+            [] if not recipe else [ recipe ]
             self.rules.append(Rule(
                 Filenames(match_rule.group('targets').strip()),
                 Filenames(match_rule.group('prereqs').strip()),
                 not self.rules, match_rule.group('grouped') is not None,
-                (match_rule.group('recipe') or '').lstrip(';').strip()))
+                [] if not recipe else [ recipe ]))
 
             # switch to parse recipe in rule context
             self.parser_ctx = ParserContext.RULE_CTX
