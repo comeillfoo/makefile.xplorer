@@ -1,4 +1,4 @@
-# mk_parser
+# makefile.xplorer
 
 Try to make Makefile parser for the it subsequent processing using other tools.
 
